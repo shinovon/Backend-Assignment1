@@ -13,17 +13,16 @@ app.use(express.json());
 
 app.get('/', (request, response) => {
 	response.writeHead(200, { "Content-Type": "text/plain" });
-	response.write("Server is running\n");
+	response.end("Server is running\n");
 })
 
 app.get('/hello', (request, response) => {
-	response.writeHead(200, { "Content-Type": "application/json" });
-	response.write('{"message":"Hello from server!"}');
+	response.status(200).send({message: "Hello from server!"});
 })
 
 app.get('/time', (request, response) => {
 	response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-	response.write(new Date().toString());
+	response.end(new Date().toString());
 })
 
 function getData() {
@@ -41,21 +40,20 @@ app.get('/objects', (request, response) => {
 });
 
 app.post('/objects', (request, response) => {
-	console.log(request.body);
 	let name = request.body.name;
 	let data = getData();
 	const id = randomUUID();
-	data.objects.push({name: name, id: randomUUID()});
-	console.log(data);
+	console.log("POST " + id);
+	data.objects.push({name: name, id: id});
 	writeData(data);
-	response.status(200).send({success: true, object: {name: name, id: randomUUID()}});
+	response.status(200).send({success: true, object: {name: name, id: id}});
 });
 
 app.put('/objects/{:id}', (request, response) => {
-	console.log(request.body)
 	let data = getData();
 	let found = false;
 	const id = request.params.id;
+	console.log("PUT " + id);
 	for (const obj of data.objects) {
 		if (obj.id == id) {
 			obj.name = request.body.name;
@@ -72,9 +70,9 @@ app.put('/objects/{:id}', (request, response) => {
 });
 
 app.delete('/objects/{:id}', (request, response) => {
-	console.log(request.body);
 	let data = getData();
 	const id = request.params.id;
+	console.log("DELETE " + id);
 	let found = false;
 	for (const obj of data.objects) {
 		if (obj.id == id) {
