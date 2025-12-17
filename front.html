@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>api test</title>
+<script>
+async function get() {
+	const res = await fetch("/objects");
+    document.getElementById("response").textContent = JSON.stringify(await res.json(), null, 2);
+}
+async function post() {
+    let d = {'name': document.getElementById("name").value}
+	const res = await fetch("/objects",
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(d)
+    });
+    document.getElementById("response").textContent = JSON.stringify(await res.json(), null, 2);
+}
+async function put() {
+    let id = document.getElementById("id").value;
+    let d = {'name': document.getElementById("name").value}
+	const res = await fetch("/objects/" + id,
+    {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(d)
+    });
+    document.getElementById("response").textContent = JSON.stringify(await res.json(), null, 2);
+}
+async function del() {
+    let id = document.getElementById("id").value;
+	const res = await fetch("/objects/" + id,
+    {
+        method: 'DELETE'
+    });
+    document.getElementById("response").textContent = JSON.stringify(await res.json(), null, 2);
+}
+</script>
+</head>
+<body>
+<label for="id">ID: </label>
+<input type="text" id="id"></input><br>
+<label for="name">Name: </label>
+<input type="text" id="name"></input>
+<button onclick="get()">Get</button>
+<button onclick="post()">Post</button>
+<button onclick="put()">Put</button>
+<button onclick="del()">Delete</button>
+<pre id="response">
+</pre>
+</body>
+</html>
