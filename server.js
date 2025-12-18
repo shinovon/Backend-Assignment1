@@ -39,14 +39,34 @@ app.get('/objects', (request, response) => {
 	response.sendFile(dataFile);
 });
 
+app.get('/objects/{:id}', (request, response) => {
+	let data = getData();
+	const id = request.params.id;
+	console.log("GET " + id);
+	let found = false;
+	for (const obj of data.objects) {
+		if (obj.id == id) {
+			found = obj;
+			break;
+		}
+	}
+	if (!found) {
+		response.status(404).send({error: "Object not found"});
+	} else {
+		response.status(200).send({success: true, object: found});
+	}
+});
+
 app.post('/objects', (request, response) => {
-	let name = request.body.name;
+	let firstname = request.body.firstName;
+	let lastname = request.body.lastName;
+	let email = request.body.email;
 	let data = getData();
 	const id = randomUUID();
 	console.log("POST " + id);
-	data.objects.push({name: name, id: id});
+	data.objects.push({firstName: firstname, lastName: lastname, email: email, id: id});
 	writeData(data);
-	response.status(200).send({success: true, object: {name: name, id: id}});
+	response.status(200).send({success: true, object: {firstName: firstname, lastName: lastname, email: email, id: id}});
 });
 
 app.put('/objects/{:id}', (request, response) => {
@@ -56,7 +76,15 @@ app.put('/objects/{:id}', (request, response) => {
 	console.log("PUT " + id);
 	for (const obj of data.objects) {
 		if (obj.id == id) {
-			obj.name = request.body.name;
+			if ('firstName' in request.body) {
+				obj.firstName = request.body.firstName;
+			}
+			if ('lastName' in request.body) {
+				obj.lastName = request.body.lastName;
+			}
+			if ('email' in request.body) {
+				obj.email = request.body.email;
+			}
 			found = obj;
 			break;
 		}
