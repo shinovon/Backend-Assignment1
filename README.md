@@ -8,6 +8,13 @@ This repository demonstrates Node.js Express server with CRUD API and JSON stora
 
 Navigate to http://localhost:81/front for frontend page
 
+## Objects description
+Topic is contacts, each object contains 4 properties:
+- First Name (string)
+- Last Name (string)
+- Email (string)
+- Entry ID (uuid string)
+
 ## Demo routes
 ### GET `/`
 Returns "Server is running" text
