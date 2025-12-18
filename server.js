@@ -25,6 +25,10 @@ app.get('/time', (request, response) => {
 	response.end(new Date().toString());
 })
 
+app.get('/status', (request, response) => {
+	response.status(200).send({message: "Server is running normally"});
+})
+
 function getData() {
 	return JSON.parse(fs.readFileSync(dataFile, 'utf8'));
 }
